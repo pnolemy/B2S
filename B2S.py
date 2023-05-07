@@ -148,7 +148,7 @@ charToArray = {
 }
 
 # contur
-url = r'C:\Users\pimju\PycharmProjects\B2S\Braille Dataset\Hello\ilym.jpg'
+url = r'C:\Users\pimju\PycharmProjects\B2S\Braille Dataset\Hello\iloveai.jpg'
 img = cv2.imread(url)
 rgb = cv2.cvtColor(img,cv2.COLOR_BGR2RGB)
 gray = cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
@@ -210,8 +210,8 @@ for col in range(num_columns):
     url2 = f"column_{col+1}.jpg"
     img = cv2.imread(url2)
 
-    plt.imshow(img)
-    plt.show()
+    # plt.imshow(img)
+    # plt.show()
 
     box_width = int((x1ce-x0)/2)
     box_height = int(y1ce/3)
@@ -241,8 +241,6 @@ for col in range(num_columns):
             # Find contours in the box
             contours, _ = cv2.findContours(box_thresh, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 
-            # qqqq
-
             # If at least one contour is found, there is a dot in the box
             if len(contours) > 0:
                 # Get the coordinates of the center of the dot
@@ -260,8 +258,8 @@ for col in range(num_columns):
                 r.append(0)
         boxes.append(r)
 
-    plt.imshow(img)
-    plt.show()
+    # plt.imshow(img)
+    # plt.show()
 
     for key, value in charToArray.items():
         if value == boxes:
