@@ -1,18 +1,12 @@
-import numpy as np
 import matplotlib.pyplot as plt
 import cv2
 import math
+import os # For playing the converted audio
 
 from PIL import Image
+from gtts import gTTS # module for text to speech conversion
 
-# Import the required module for text
-# to speech conversion
-from gtts import gTTS
-
-# This module is imported so that we can
-# play the converted audio
-import os
-
+# model
 charToArray = {
     " " : [[0,0],[0,0],[0,0]],
     "a" : [
@@ -147,8 +141,8 @@ charToArray = {
         ],
 }
 
-# contur
-url = r'C:\Users\pimju\PycharmProjects\B2S\Braille Dataset\Hello\iloveai.jpg'
+# contour
+url = r'C:\Users\pimju\PycharmProjects\B2S\Braille Dataset\Hello\whatisdis.jpg'
 img = cv2.imread(url)
 rgb = cv2.cvtColor(img,cv2.COLOR_BGR2RGB)
 gray = cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
@@ -162,28 +156,19 @@ contours, hir = cv2.findContours(bw,
 img = cv2.cvtColor(bw,cv2.COLOR_GRAY2RGB)
 cv2.drawContours(img,contours,-1,(255,0,0),1)
 
-# colList = []
-count = 0
 for i in range(len(contours)):
   cnt = contours[i]
   x,y,w,h = cv2.boundingRect(cnt)
-  area = cv2.contourArea(cnt)
   # print(x, y) #print coordinate
 
   cv2.rectangle(img,(x,y),(x+w,y+h),(0,255,0),2)
-
-  #print('x', i, ': ', x, ' y', i, ': ', y)
-  # colList.append(x)
-
 # print((x+w)-x,(y+h)-y)
 
-height, width, channels = img.shape
+image = Image.open(url)
 
-amount = width/(((x+w)-x)*4)
-# dis = maxCol - minCol
+amount = image.width/(((x+w)-x)*4)
 # print(math.floor(amount))
 
-image = Image.open(url)
 # Calculate the number of columns
 num_columns = int(math.floor(amount))
 
@@ -198,13 +183,13 @@ plt.imshow(img)
 plt.show()
 
 # Crop the image into separate columns and save them as separate files
-word = []
+char = []
 for col in range(num_columns):
     x0 = col * cell_width
     y0 = 0
-    x1ce = x0 + cell_width
-    y1ce = image.height
-    column_image = image.crop((x0, y0, x1ce, y1ce))
+    x1cel = x0 + cell_width
+    y1cel = image.height
+    column_image = image.crop((x0, y0, x1cel, y1cel))
     column_image.save(f"column_{col+1}.jpg")
 
     url2 = f"column_{col+1}.jpg"
@@ -213,11 +198,10 @@ for col in range(num_columns):
     # plt.imshow(img)
     # plt.show()
 
-    box_width = int((x1ce-x0)/2)
-    box_height = int(y1ce/3)
+    box_width = int((x1cel-x0)/2)
+    box_height = int(y1cel/3)
 
     boxes = []
-
     # Loop through each box
     for i in range(3):
         r = []
@@ -261,15 +245,15 @@ for col in range(num_columns):
     # plt.imshow(img)
     # plt.show()
 
+    # gat the alphabet
     for key, value in charToArray.items():
         if value == boxes:
             print(key)
-            word.append(key)
+            char.append(key)
 
-print(word)
-SPEECH = ''.join(map(str, word))
+print(char)
+SPEECH = ''.join(map(str, char))
 print(SPEECH)
-
 
 # The text that you want to convert to audio
 mytext = SPEECH
